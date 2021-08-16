@@ -1,7 +1,10 @@
-
+// This is the entry point of the server. Requests come here... 
 
 const express = require('express')
+const dataService = require('./services/data.service')
 const app = express()
+app.use(express.json())
+
 app.get('/',(req,res)=>{
     res.send("SERVER STARTED")
 })
@@ -20,6 +23,20 @@ app.patch('/',(req,res)=>{
 app.delete('/',(req,res)=>{
     res.send("delete method")
 }) 
+
+app.post('/register',(req,res)=>{
+
+    console.log(req.body);
+    const result= dataService.register(req.body.acno,req.body.username,req.body.password)
+    res.status(result.statusCode).json(result)
+
+})
+
+app.post('/login', (req,res)=>{
+    console.log(req.body);
+    const result= dataService.login(req.body.acno,req.body.password)
+    res.status(result.statusCode).json(result)
+})
 
 app.listen(3000,()=> {
     console.log("Server started at port number :3000");
