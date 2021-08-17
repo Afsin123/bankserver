@@ -38,6 +38,18 @@ app.post('/login', (req,res)=>{
     res.status(result.statusCode).json(result)
 })
 
+app.post('/deposit', (req,res)=>{
+    console.log(req.body);
+    const result= dataService.deposit(req.body.acno, req.body.password, req.body.amount )
+    res.status(result.statusCode).json(result)
+})
+
+app.post('/withdraw', (req,res)=>{
+    console.log(req.body);
+    const result= dataService.withdraw(req.body.acno, req.body.password, req.body.amount )
+    res.status(result.statusCode).json(result)
+})
+
 app.listen(3000,()=> {
     console.log("Server started at port number :3000");
 })

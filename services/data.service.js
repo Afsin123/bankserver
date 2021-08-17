@@ -15,7 +15,7 @@ const register = (acno, username, password) => {
   if (acno in user) {
 
     return {
-      statusCode:422,
+      statusCode: 422,
       status: false,
       message: "User already exists..!! Please log in...!! "
     }
@@ -30,7 +30,7 @@ const register = (acno, username, password) => {
     }
 
     return {
-      statusCode:200,
+      statusCode: 200,
       status: true,
       message: "Registered Successfullly...!!!"
     }
@@ -51,7 +51,7 @@ const login = (acno, password) => {
       //this.currentAcc=acno
       //this.saveDetails()
       return {
-        statusCode:200,
+        statusCode: 200,
         status: true,
         message: "User logged in successfully...!!"
 
@@ -60,7 +60,7 @@ const login = (acno, password) => {
     else {
 
       return {
-        statusCode:422,
+        statusCode: 422,
         status: false,
         message: "Incorrect password"
       }
@@ -68,7 +68,7 @@ const login = (acno, password) => {
   }
   else {
     return {
-      statusCode:422,
+      statusCode: 422,
       status: false,
       message: "Incorrect Username/accno"
 
@@ -78,10 +78,109 @@ const login = (acno, password) => {
   }
 }
 
-  module.exports = {
-    register, 
-    login
+//Deposit
 
+const deposit = (acno, password, amount) => {
+
+  var amt = parseInt(amount)
+
+  //let accDetails = this.user
+  if (acno in user) {
+    if (password == user[acno]["password"]) {
+      user[acno]["balance"] += amt
+
+      user[acno].transaction.push({
+        amt: amt,
+        type: "CREDIT "
+      })
+
+      //this.saveDetails()
+      
+      
+      return{
+        statusCode:200,
+        status: true,
+        message: amount+"deposited successfully and new balance is"+ user[acno]["balance"]
+      }
+    }
+
+    else {
+      return {
+        statusCode: 422,
+        status: false,
+        message: "Incorrect password...!!!!"
+
+      }
+    }
   }
-  
+
+  else {
+    return {
+      statusCode: 422,
+      status: false,
+      message: "Invalid User...!!!1"
+
+    }
+  }
+}
+
+//Withdraw function
+const withdraw= (acno, password, amount)=> {
+
+  var amt = parseInt(amount)
+
+  //let accDetails = this.user
+  if (acno in user){
+    if( password == user[acno]["password"]){
+      if(user[acno]["balance"] >amt) { 
+      user[acno]["balance"]-= amt
+
+      user[acno].transaction.push({
+        amt:amt,
+        type: "DEBIT "
+      } )
+    //  this.saveDetails() 
+      //return accDetails[acno]["balance"]
+      return {
+        statusCode:200,
+        status: true,
+        message: amount+" withdrawn successfully and new balance is"+ user[acno]["balance"]
+      }
+    }
+    else {
+     
+      return {
+        statusCode: 422,
+       status: false,
+       message: "Insufficient Balance..!!!!"
+       }
+      
+    }
+    }
+    else { 
+      return {
+        statusCode: 422,
+       status: false,
+       message: "Incorrect Password..!!!!"
+       }
+    }
+  }
+  else {
+    return {
+      statusCode: 422,
+     status: false,
+     message: "Invalid User..!!!!"
+     }
+  }
+}
+
+
+
+module.exports = {
+  register,
+  login,
+  deposit,
+  withdraw 
+}
+
 
